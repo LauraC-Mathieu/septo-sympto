@@ -27,50 +27,41 @@ leaf,leaf_area_px,leaf_area_cm,necrosis_number,necrosis_area_ratio,necrosis_area
 ```
 
 ## Requirements
-The project requires the following libraries to be installed:
+1. Install [Python](https://www.python.org/downloads/)
 
-- OpenCV
-- TensorFlow
-- PIL
-- numpy
-- pandas
-- scipy
-- sklearn
-- ipython
-- matplotlib
-- psutil
-- seaborn
-- tqdm
-- pyaml
-- ultralytics
+2. Create a conda environment with the following command:
+```bash
+conda create -n septo-sympto python=3.9
+```
 
-You need to install [Pytorch](https://pytorch.org/) depending on your device.
+3. Activate the environment with the following command:
+```bash
+conda activate septo-sympto
+```
 
-Make sure your leafs in your images are in the horizontal axis.  
+4. Install dependencies with the following command:
+```bash
+pip install -r requirements.txt
+```
 
-Download the requirements.txt file and run the following command to install the required libraries:
+If necessary, you can install the YOLOv5 requirements that you can find in the [YOLOv5 repository](htts://github.com/ultralytics/yolov5).
+
+5. Download the pre-trained models and place them in the "models" folder:
 - [pycnidia-model.pt](https://drive.google.com/file/d/1WLIej7263MieoIrfGBtN7ljiZpE4NZy1/view?usp=share_link)
 - [necrosis-model-375.h5](https://drive.google.com/file/d/1BPOsgdUjoA8uCGht4-kL2Er3SbB4JalR/view?usp=share_link)
 
-Tutorials: 
-- [YOLOv5 model training](https://www.youtube.com/watch?v=19VbN6IK1zM&ab_channel=LauraMATHIEU)
-- [U-Net model training](https://www.youtube.com/watch?v=KhGBcwwc-zQ&ab_channel=LauraMATHIEU)
+6. Put your images in the "images" folder and your csv file in the "import" folder. Make sure yours images are in the horizontal axis.
 
-For more informations:
-- [YOLOv5](https://github.com/ultralytics/yolov5)
-
-## Usage
-To use the script, run the script with the following command line arguments:
-
-Copy code
-```py 
-python septo_sympto.py -w <images_folder> -i <csv_import> -o <csv_output> -m <model_path> -e <image_extension> -is <image_size> -d <device> -pt <pycnidia_threshold> -pn <necrosis_threshold> -sm <save_masks> -s <save>
+7. Run the script with the following command line arguments:
+```bash
+python3 septo_sympto.py -w <images_folder> -i <csv_import> -o <csv_output> -nm <necrosis_model> -pm <pycnidia_model> -e <image_extension> -is <image_size> -d <device> -pt <pycnidia_threshold> -pn <necrosis_threshold> -sm <save_masks> -ns <no-save>
 ```
 
 - `-w` or `--images_input` : specify the name of the folder containing the images. Default is 'images'.
 - `-i` or `--import` : specify the name of the CSV file to import. Default is None.
 - `-o` or `--output` : specify the name of the CSV file to output the results. Default is 'results.csv'.
-- `-m` or `--model` : specify the path of the pre-trained model to use. Default is 'models/necrosis-model-375.h5'.
+- `-nm` or `--necrosis_model` : specify the path to the pre-trained necrosis model. Default is 'models/necrosis-model-375.h5'.
+- `-pm` or `--pycnidia_model` : specify the path to the pre-trained pycnidia model. Default is 'models/pycnidia-model.pt'.
 - `-e` or `--extension` : specify the extension of the images. Default is '.tif'.
 - `-is` or `--imgsz` : specify the size of the images for inference. Default is [304, 3072].
 - `-d` or `--device` : specify the device to use for inference. Can be 'cpu', 'mps' for M1&M2 or a number for specific GPU. Default is 'cpu'.
@@ -81,7 +72,16 @@ python septo_sympto.py -w <images_folder> -i <csv_import> -o <csv_output> -m <mo
 - `-sm` or `--save-masks` : specify if you want to save the masks. Default is False.
 - `-ns` or `--no-save` : specify if you want to not save the image results in output folder. Default is False.
 
-Note: Please make sure the pre-trained model is in the specified path and the specified folder contains the images with the specified extension.
+Tutorials: 
+- [YOLOv5 model training](https://www.youtube.com/watch?v=19VbN6IK1zM&ab_channel=LauraMATHIEU)
+- [U-Net model training](https://www.youtube.com/watch?v=KhGBcwwc-zQ&ab_channel=LauraMATHIEU)
+
+For more informations:
+- [YOLOv5](https://github.com/ultralytics/yolov5)
+
+Datasets: [Septo-Sympto Datasets](https://drive.google.com/drive/folders/1a2VhXy-sMx77-BOHEgP7jXdWoIJI20s4?usp=sharing)
+
+ 
 
 ## Train weights
 
@@ -91,7 +91,7 @@ To train new weights for you application, please use the following tutorials :
 - Pycnidia (YOLOv5) : https://github.com/ultralytics/yolov5
 - Necrosis (U-Net) : https://github.com/maximereder/unet
 
-Necrosis and pycnidia are detected thanks to the SeptoSympto script, which cuts each leaf to be able to analyze them with deep learning models. 
+Necrosis and pycnidia are detected thanks to the SeptoSympto script, which cuts each leaf to be able to analyze them with deep learning models.
 
 To run the image analysis, a folder must contain files called “images_input”, “csv_input”, “models”, “outputs”, “tools” and the script SeptoSympto available on https://github.com/maximereder/septo-sympto. The images in TIFF format and scanned at 1200 dpi are either directly usable by SeptoSympto if there are only horizontally scanned leaves on the image, or pre-cut and renamed with the XnView software if there are writings on the scanned images in order to have only horizontal leaves present on the input images. These images are stored in a folder called “images_input”. A file in csv format containing information for each image and the name of each image in the first column can be added in the file called “csv_input”. The deep learning-based models used for necrosis and pycnidia detection, respectively necrosis-model-375.h5 and pycnidia-model.pt, are stored in “models” folder. The “tools” folder contains a python script called “metrics.py” to calculate metrics for segmentation models and can also store other optional scripts.
 
